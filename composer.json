@@ -1,0 +1,17 @@
+{
+    "name": "amirabroun/admin",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": [
+            "app/Helpers/functions.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "amirabroun",
+            "email": "abroon234@gmail.com"
+        }
+    ]
+}
