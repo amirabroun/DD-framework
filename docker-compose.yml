@@ -2,8 +2,8 @@ version: "3.9"
 services:
 
     nginx:
-        container_name: nginx-didishop
-        build: ./Docker/nginx
+        container_name: nginx-DD-framwork
+        build: ./docker/nginx
         links:
             - php
         volumes:
@@ -12,8 +12,8 @@ services:
             - 8000:80
 
     php:
-        container_name: php-didishop
-        build: ./Docker/php
+        container_name: php-DD-framwork
+        build: ./docker/php
         volumes:
             - ${PWD}:/usr/share/nginx/www
         working_dir: ${PWD}:/usr/share/nginx/www

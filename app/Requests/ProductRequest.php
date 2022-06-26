@@ -11,12 +11,11 @@ class ProductRequest extends Request
         'price_discounted' => 'number',
         'description' => 'required',
     ];
-    
+
     public function validated(array $rules = null, string $returnValue = 'post')
     {
-        if (isNotEmpty($rules))
-            return $this->validate($rules, $returnValue);
-
-        return $this->validate($this->rules, $returnValue);
+        return isNotEmpty($rules)
+            ? $this->validate($rules, $returnValue)
+            : $this->validate($this->rules, $returnValue);
     }
 }

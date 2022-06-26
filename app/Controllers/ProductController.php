@@ -2,37 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Config\Config;
 use App\Models\Photo;
 use App\Models\Product;
 use App\Controllers\Controller;
-use App\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
-    public static function createProduct(ProductRequest $request)
-    {
-        $product = $request->validate();
-
-        $createProduct = Product::createProduct(
-            $product->title,
-            convertNumberToEnglish($product->price),
-            convertNumberToEnglish($product->price_discounted),
-            $product->stock,
-            $product->brand,
-            $product->description
-        );
-
-        if (!$createProduct)
-            self::failAction();
-
-        foreach ($product->category as $item)
-            Product::createCategoryProduct($item, $createProduct);
-
-
-        self::successCreateAction();
-    }
-
     public static function uploadPictureProduct()
     {
         if (array_sum($_FILES['picture_product_file']['size']) === 0) {
@@ -78,7 +53,6 @@ class ProductController extends Controller
                 $createPhoto = Photo::createPhoto($new_name, $path);
 
                 if ($createPhoto) {
-
                     Product::deletePhotoProduct($_POST['product_id'], $key + 1);
 
                     $createPhotoProduct = Product::createPhotoProduct($createPhoto, $_POST['product_id'], $key + 1);
@@ -101,55 +75,5 @@ class ProductController extends Controller
                 'type' => (!empty($errors) ? 'error' : 'success'),
             ],
         ]);
-    }
-
-    public static function updateProduct(ProductRequest $request)
-    {
-        $product = $request->validate([
-            'title' => 'required',
-            'brand_id' => '',
-            'description' => 'required',
-        ]);
-
-        $updateProduct = Product::updateProduct(
-            $product->id,
-            $product->brand_id,
-            $product->title,
-            $product->description
-        );
-
-        if (!$updateProduct)
-            self::failAction();
-
-        self::successUpdateAction();
-    }
-
-    public static function failAction()
-    {
-        sweetAlert(
-            'عملیات با خطا مواجه شد!',
-            'عملیات ناموفق',
-            'error'
-        );
-    }
-
-    public static function successUpdateAction()
-    {
-        sweetAlert(
-            'محصول با موفقیت ویرایش شد!',
-            'عملیات موفق',
-            'success',
-            true
-        );
-    }
-
-    public static function successCreateAction()
-    {
-        sweetAlert(
-            'محصول با موفقیت ایجاد شد!',
-            'عملیات موفق',
-            'success',
-            true
-        );
     }
 }

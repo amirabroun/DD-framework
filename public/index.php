@@ -1,16 +1,5 @@
 <?php
 
-use App\Router\Routing;
-
-/**
- * Start Session
- * 
- * @var array $_SESSION
- */
-if (empty($_SESSION)) {
-    session_start();
-}
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -26,13 +15,21 @@ require __DIR__ . "/../vendor/autoload.php";
 |--------------------------------------------------------------------------
 */
 
+/**
+ * Start Session
+ */
+if (empty($_SESSION)) {
+    session_start();
+}
+
 if (empty($_SESSION["_admin_log_"]) && !(in_array(uri(), ignoreAuthPage()))) {
     fail();
 }
 
-if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKey('secret_login')))) {
-    redirect()->route('/');
-}
+// if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKey('secret_login')))) {
+//     redirect()->route('/');
+// }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +41,6 @@ if ((uri() != "/") and preg_match('{/$}', uri())) {
     redirect()->route(preg_replace('{/$}', '', uri()));
 }
 
-require __DIR__ .  "/../routes/route.php";
+require __DIR__ .  "/../routes/" .  \App\Provider\RouteServiceProvider::CurrentFile();
 
-(new Routing)->findRoute()->findRouter()->run();
+(new \App\Router\Routing())->findRoute()->findRouter()->run();

@@ -74,6 +74,11 @@ function dd(...$data)
     die(var_dump((object)$data));
 }
 
+function logger()
+{
+    throw new Exception();
+}
+
 function ddd(...$data)
 {
     die(json_encode([$data]));

@@ -4,12 +4,42 @@ namespace App\Router;
 
 use App\Helpers\ReflectionHelper;
 use App\Provider\RouteServiceProvider;
+use Exception;
 
 class Routing
 {
 
-    protected string $route;
-    protected Router $router;
+    /**
+     * @var array $routes
+     */
+    private array $routes = [];
+
+    /**
+     * current route
+     * 
+     * @var string $route
+     */
+    private string $route = '';
+
+    /**
+     * current router
+     * 
+     * @var Router $route
+     */
+    private Router $router;
+
+    /**
+     * @var string $prefix
+     */
+    private string $prefix = '';
+
+    /**
+     * @return void
+     */
+    public function __construct($prefix = null)
+    {
+        $this->prefix = $prefix ?? explode('/', trim(uri(), '/'))[0];
+    }
 
     public function findRoute()
     {
@@ -19,14 +49,14 @@ class Routing
             return $this;
         }
 
-        $routes = array_keys(RouteServiceProvider::$routes[requestMethod()]);
+        $this->routes = array_keys(RouteServiceProvider::$routes[requestMethod()]);
 
-        foreach ($routes as $key => $route) {
+        foreach ($this->routes as $key => $route) {
             if (!checkRoute($route)) {
                 continue;
             }
 
-            $this->route = $routes[$key];
+            $this->route = $this->routes[$key];
         }
 
         return $this;
@@ -39,40 +69,47 @@ class Routing
         return $this;
     }
 
+    /**
+     * @return void
+     */
     public function run()
     {
-        if (is_string($this->router->action) || is_array($this->router->action)) {
-            $this->findAction($this->router->action);
+        if (!isset($this->router->controller)) {
+            $this->runCallable($this->router->function);
         }
 
-        if (is_callable($this->router->action)) {
-            if ($paramFunction = $this->getUriDataForCreateParamFunction($this->router->action)) {
-                call_user_func_array($this->router->action, $paramFunction);
-                exit;
-            }
+        if (isset($this->router->controller, $this->router->function)) {
+            $this->runMethodController($this->router->function, $this->router->controller);
+        }
 
-            call_user_func($this->router->action);
+        throw new Exception('Oops! Action is null');
+    }
+
+    private function runCallable($function)
+    {
+        if ($paramFunction = $this->getUriDataForCreateParamFunction($function)) {
+            call_user_func_array($function, $paramFunction);
             exit;
         }
 
-        if ($paramFunction = $this->getUriDataForCreateParamFunction($this->router->function, $this->router->controller)) {
-            call_user_func_array([new $this->router->controller, $this->router->function], $paramFunction);
-        }
-
-        call_user_func([new $this->router->controller, $this->router->function]);
+        call_user_func($function);
+        exit;
     }
 
-    public function findAction(string|array $action)
+    private function runMethodController($function, $controller = null)
     {
-        if (is_string($action)) {
-            $this->router->controller = "App\\Controllers\\" . substr($action, 0, strpos($action, "@"));
-            $this->router->function = substr($action, strpos($action, "@") + 1);
-        } else {
-            $this->router->controller = $action[0];
-            $this->router->function = $action[1];
+        if ($paramFunction = $this->getUriDataForCreateParamFunction($function, $controller)) {
+            call_user_func_array([new $controller, $function], $paramFunction);
+            exit;
         }
 
-        return $this;
+        call_user_func([new $controller, $function]);
+        exit;
+    }
+
+    public static function prefix($prefix = null)
+    {
+        return new Routing($prefix);
     }
 
     private function getUriDataForCreateParamFunction($function, $controller = null)

@@ -23,7 +23,7 @@ class Category extends Model
     {
     }
 
-    public static function getCategoryChild(int $id)
+    public static function getCategoryChilds(int $id)
     {
         $action = new Model("SELECT * From categories where parent_id = ?");
 

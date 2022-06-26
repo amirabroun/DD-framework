@@ -40,8 +40,14 @@ class Request
                 ->sweetAlert();
         }
 
-        if ($returnValue == 'post') return $this->post;
-        if ($returnValue == 'get') return $this->get;
+        if ($returnValue == 'post') {
+            return $this->post;
+        }
+
+        if ($returnValue == 'get') {
+            return $this->get;
+        }
+        
         return $this->request;
     }
 }
