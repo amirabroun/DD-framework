@@ -8,6 +8,7 @@ use App\Controllers\Controller;
 
 class ProductController extends Controller
 {
+
     public static function uploadPictureProduct()
     {
         if (array_sum($_FILES['picture_product_file']['size']) === 0) {

@@ -8,21 +8,20 @@ use App\Controllers\Controller;
 
 class LoginController extends Controller
 {
+
     public function adminLogin(LoginRequest $request)
     {
         $admin = $request->validated();
 
         if (!$admin = Admin::doLogin($admin->username, $admin->password)) {
-            $this->apiResponse->setStatus(404)->setTitle('ورود ناموفق')
-                ->setMessage('اطلاعات وارد شده نامعتبر است!')
-                ->sweetAlert();
+            includePath()->view('auth.login', [
+                'error' => 'Incurrect username or password'
+            ]);
         }
 
         $_SESSION['_admin_log_'] = $admin;
-        $this->apiResponse->setStatus(200)
-            ->setTitle("$admin->first_name $admin->last_name  عزیز")
-            ->setMessage('شما با موفقیت وارد شدید!')
-            ->sweetAlert();
+
+        redirect()->route('/');
     }
 
     public function logOut()
