@@ -8,7 +8,6 @@
 
 require __DIR__ . "/../vendor/autoload.php";
 
-
 /*
 |--------------------------------------------------------------------------
 | Auth Section
@@ -26,10 +25,9 @@ if (empty($_SESSION["_admin_log_"]) && !(in_array(uri(), ignoreAuthPage()))) {
     fail();
 }
 
-// if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKey('secret_login')))) {
-//     redirect()->route('/');
-// }
-
+if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKey('secret_login')))) {
+    redirect()->route('/');
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +35,6 @@ if (empty($_SESSION["_admin_log_"]) && !(in_array(uri(), ignoreAuthPage()))) {
 |--------------------------------------------------------------------------
 */
 
-if ((uri() != "/") and preg_match('{/$}', uri())) {
-    redirect()->route(preg_replace('{/$}', '', uri()));
-}
+\App\Provider\RouteServiceProvider::loadRoutes();
 
-require __DIR__ .  "/../routes/" .  \App\Provider\RouteServiceProvider::CurrentFile();
-
-(new \App\Router\Routing())->findRoute()->findRouter()->run();
+\App\Router\Routing::findRoute()->findRouter()->run();

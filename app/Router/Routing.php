@@ -28,38 +28,27 @@ class Routing
      */
     private Router $router;
 
-    /**
-     * @var string $prefix
-     */
-    private string $prefix = '';
-
-    /**
-     * @return void
-     */
-    public function __construct($prefix = null)
+    public static function findRoute()
     {
-        $this->prefix = $prefix ?? explode('/', trim(uri(), '/'))[0];
-    }
+        $instance = new static;
 
-    public function findRoute()
-    {
         if (isset(RouteServiceProvider::$routes[requestMethod()][uri()])) {
-            $this->route = uri();
+            $instance->route = uri();
 
-            return $this;
+            return $instance;
         }
 
-        $this->routes = array_keys(RouteServiceProvider::$routes[requestMethod()]);
+        $instance->routes = array_keys(RouteServiceProvider::$routes[requestMethod()]);
 
-        foreach ($this->routes as $key => $route) {
+        foreach ($instance->routes as $key => $route) {
             if (!checkRoute($route)) {
                 continue;
             }
 
-            $this->route = $this->routes[$key];
+            $instance->route = $instance->routes[$key];
         }
 
-        return $this;
+        return $instance;
     }
 
     public function findRouter()
@@ -105,11 +94,6 @@ class Routing
 
         call_user_func([new $controller, $function]);
         exit;
-    }
-
-    public static function prefix($prefix = null)
-    {
-        return new Routing($prefix);
     }
 
     private function getUriDataForCreateParamFunction($function, $controller = null)

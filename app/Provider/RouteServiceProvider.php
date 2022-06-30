@@ -2,8 +2,7 @@
 
 namespace App\Provider;
 
-
-class RouteServiceProvider
+class RouteServiceProvider extends ServiceProvider
 {
 
     /**
@@ -11,19 +10,10 @@ class RouteServiceProvider
      */
     public static $routes = [];
 
-    /**
-     * @param key 'prefix'=>'file'
-     * 
-     * @var array route files
-     */
-    const FILES = [
-        'login' => 'auth.php',
-        'log-out' => 'auth.php',
-        'brands' => 'brand.php',
-        'categories' => 'category.php',
-        'products' => 'product.php',
-        '' => 'web.php',
-    ];
+    private function boot()
+    {
+        return $this->routes('auth.php', 'brand.php', 'category.php', 'product.php', 'web.php');
+    }
 
     /**
      * Current file for this prefix
@@ -31,12 +21,10 @@ class RouteServiceProvider
      * @param string $prefix
      * @return string CurrentFile
      */
-    public static function CurrentFile($prefix = null)
+    public static function loadRoutes()
     {
-        if (!isset($prefix)) {
-            $prefix = explode('/', trim(uri(), '/'))[0];
-        }
+        $instance = new static;
 
-        return self::FILES[$prefix] ?? 'web.php';
+        $instance->boot();
     }
 }
