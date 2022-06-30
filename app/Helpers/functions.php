@@ -33,6 +33,11 @@ function assets($path = '')
     return originBaseUrl() . '/' . $_SERVER['HTTP_HOST'] . '/public/Assets/' . ltrim($path, '/');
 }
 
+function css($path = '')
+{
+    return originBaseUrl() . '/' . $_SERVER['HTTP_HOST'] . '/public/Assets/css' . ltrim($path, '/');
+}
+
 function plugins($path = '')
 {
     return originBaseUrl() . '/' . $_SERVER['HTTP_HOST'] . '/public/Assets/plugins/' . ltrim($path, '/');
