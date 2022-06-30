@@ -1,34 +1,9 @@
 <?php
 
 /**
- * @param string $key
+ * @param string $key secret_login|secret_recaptcha_key|site_recaptcha_key|all_secret
  *
- * @return string admin
- * @return string public
- * @return string origin
- * @return array all_domain
- */
-function domain($key = null)
-{
-    $domain = [
-        'admin' => getenv('ADMIN_DOMAIN'),
-        'public' => getenv('PUBLIC_DOMAIN'),
-        'origin' => getenv('ORIGIN_DOMAIN'),
-    ];
-
-    if ($key)
-        return $domain[$key];
-
-    return $domain;
-}
-
-/**
- * @param string $key
- *
- * @return string secret_login
- * @return string secret_recaptcha_key
- * @return string site_recaptcha_key
- * @return string all_secret
+ * @return string
  */
 function secretKey($key = null)
 {
