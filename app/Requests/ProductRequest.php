@@ -4,18 +4,19 @@ namespace App\Requests;
 
 class ProductRequest extends Request
 {
-    protected array $rules = [
-        'title' => 'required',
-        'brand_id' => '',
-        'price' => 'required|number',
-        'price_discounted' => 'number',
-        'description' => 'required',
-    ];
-
-    public function validated(array $rules = null, string $returnValue = 'post')
+    public function rules()
     {
-        return isNotEmpty($rules)
-            ? $this->validate($rules, $returnValue)
-            : $this->validate($this->rules, $returnValue);
+        return [
+            'title' => 'required',
+            'brand_id' => '',
+            'price' => 'required|number',
+            'price_discounted' => 'number',
+            'description' => 'required',
+        ];
+    }
+
+    public function handle()
+    {
+        //
     }
 }
