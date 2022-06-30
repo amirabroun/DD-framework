@@ -61,74 +61,15 @@ function validatorByRules($rules, $input)
     return $errors;
 }
 
-function translate($words, $is_rule = false)
+function ruleAttributes()
 {
-    if ($is_rule) {
-        $attributes = attributesTranslate('rule');
-        return @$attributes[$words];
-    }
-
-    $attributes = attributesTranslate('input');
-    return @$attributes[$words];
-}
-
-function attributesTranslate($ruleOrInput)
-{
-    if ($ruleOrInput === 'rule') {
-        return [
-            'password' => 'کلمه عبور نباید کمتر از 8 کاراکتر باشد!<br>',
-            'mobile' => 'شماره تلفن وارد شده نامعتبر است<br>',
-            'number' => 'مقدار فیلد باید فقط عدد باشد<br>',
-            'required' => 'فیلد نباید خالی باشد!<br>',
-            'persianChar' => 'لطفا مقدار فیلد را فارسی بنویسید<br>'
-        ];
-    }
-
-    if ($ruleOrInput === 'input') {
-        return [
-            'title' => 'عنوان',
-            'id' => 'آیدی',
-            'brand_id' => 'برند',
-            'username' => 'نام کاربری',
-            'cellphone' => 'شماره تلفن همراه',
-            'password' => 'کلمه عبور',
-            'password_rule' => 'کلمه عبور',
-            'description' => 'توضیحات',
-            'first_name' => 'نام',
-            'last_name' => 'نام خانوادگی',
-        ];
-    }
-}
-
-function initErrors()
-{
-    $html_last = null;
-    $errors = @$_SESSION['error'][pageName()]['errors'];
-    $title_error = @$_SESSION['error'][pageName()]['title'];
-    if ($errors) {
-        foreach ($errors as $key => $error) {
-            $input_label = translate($key);
-            $html_first = null;
-            foreach ($error as $value) {
-                $rule_label = translate($value['rule'], true);
-                $html_first .= "<li style='margin: 5px 10px;list-style: decimal;' class='alert-text'>{$rule_label}</li>";
-            }
-            $html_last .= "<li style='margin: 5px 10px;list-style: decimal;' class='alert-text'>
-            <span class='bold fof-15'>{$input_label}:</span>
-            <ul style='padding: 0 10px;display: unset;font-size: 13px;'>
-                $html_first
-            </ul>
-        </li>";
-        }
-        $title_error = (empty($title_error)) ? 'لطفا خطا های زیر را برطرف کنید!' : $title_error;
-        unset($_SESSION['error'][pageName()]);
-        return "<ul style='padding: 0 10px;display: block;text-align: right;' class='alert alert-danger alert-bold'>
-                    <p class='bold fof-17 mt-3'>" . $title_error . ":</p>
-                    <hr>
-                    $html_last
-                </ul>";
-    }
-    return null;
+    return [
+        'password' => 'Password must not be less than 8 characters',
+        'mobile' => 'Invalid phone number entered',
+        'number' => 'The value of the field should be just a number',
+        'required' => 'The field should not be empty',
+        'persianChar' => 'Please write the field value in Persian'
+    ];
 }
 
 function isEmpty($data): bool
