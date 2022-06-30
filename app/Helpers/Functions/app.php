@@ -51,28 +51,3 @@ function appTitle()
 {
     return getenv('APP_TITLE');
 }
-
-/**
- * @return array test
- * @return array login
- * @return array Resource/login
- * @return array requests/login
- * @return array requests/order
- * @return array routes/web
- * @return array routes/auth
- * @return array login/secret/e10adc3949ba59abbe56e057f20f883e
- */
-function ignoreAuthPage()
-{
-    return [
-        'test',
-        'login',
-        'Resource/login',
-        'requests/login',
-        'requests/order',
-        'routes/web',
-        'routes/auth',
-        'login/secret/e10adc3949ba59abbe56e057f20f883e',
-        // getenv('IGNORE_FILE_AUTH'),
-    ];
-}
