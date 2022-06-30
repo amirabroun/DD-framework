@@ -7,6 +7,7 @@ use PDO;
 
 class DataBase
 {
+
     public PDO $cn;
 
     public function __construct()
