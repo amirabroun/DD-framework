@@ -8,6 +8,13 @@ use ReflectionMethod;
 class ReflectionHelper
 {
 
+    /**
+     * Types of param function
+     * 
+     * @param string|closure $function
+     * @param string $controller
+     * @return array $types
+     */
     public static function findParamFunctionTypes($function, $controller = null)
     {
         if ($controller) {
