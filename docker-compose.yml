@@ -2,17 +2,17 @@ version: "3.9"
 services:
 
     nginx:
-        container_name: nginx-DD-framwork
+        container_name: ${APP_TITLE:-nginx}
         build: ./docker/nginx
         links:
             - php
         volumes:
             - ${PWD}:/usr/share/nginx/www
         ports:
-            - 8000:80
+            - ${APP_PORT:-8000}:80
 
     php:
-        container_name: php-DD-framwork
+        container_name: php8-fpm
         build: ./docker/php
         volumes:
             - ${PWD}:/usr/share/nginx/www
@@ -23,4 +23,4 @@ services:
 networks:
     default:
         external: true
-        name: production
+        name: ${APP_DOCKER_NETWORK}
