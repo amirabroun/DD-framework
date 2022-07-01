@@ -53,17 +53,6 @@ function partials($path = ''): string
     return originBaseUrl() . '/' . $_SERVER['HTTP_HOST'] . '/resources/partials/' . ltrim($path, '/');
 }
 
-function setTitle()
-{
-    $page = str_replace(['/', '.php'], '', $_SERVER['SCRIPT_NAME']);
-    switch ($page) {
-        case 'product':
-            return appTitle() . 'لیست محصولات | ';
-        default:
-            return appTitle();
-    }
-}
-
 function categoryLink($id): string
 {
     return "/product.php?category=$id";
