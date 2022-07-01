@@ -14,9 +14,6 @@ require __DIR__ . "/../vendor/autoload.php";
 |--------------------------------------------------------------------------
 */
 
-/**
- * Start Session
- */
 if (empty($_SESSION)) {
     session_start();
 }
