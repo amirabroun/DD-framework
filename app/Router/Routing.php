@@ -15,42 +15,41 @@ class Routing
     private array $routes = [];
 
     /**
-     * current route
+     * Current route
      * 
      * @var string $route
      */
     private string $route = '';
 
     /**
-     * current router
+     * Current router
      * 
-     * @var Router $route
+     * @var Router $router
      */
     private Router $router;
 
-    public static function findRoute()
+    public function __construct($routes)
     {
-        $instance = new static;
-
-        if (isset(RouteServiceProvider::$routes[requestMethod()][uri()])) {
-            $instance->route = uri();
-
-            return $instance;
-        }
-
-        $instance->routes = array_keys(RouteServiceProvider::$routes[requestMethod()]);
-
-        foreach ($instance->routes as $key => $route) {
-            if (!checkRoute($route)) {
-                continue;
-            }
-
-            $instance->route = $instance->routes[$key];
-        }
-
-        return $instance;
+        $this->routes = $routes;
     }
 
+    /**
+     * Find currnet route for action and set to $this->route
+     * 
+     * @return $this
+     */
+    public function findRoute()
+    {
+        $this->route = $this->searchInContainerRoute();
+
+        return $this;
+    }
+
+    /**
+     * Find currnet router for $this->route
+     * 
+     * @return $this
+     */
     public function findRouter()
     {
         $this->router = RouteServiceProvider::$routes[requestMethod()][$this->route];
@@ -59,6 +58,8 @@ class Routing
     }
 
     /**
+     * Run Router
+     * 
      * @return void
      */
     public function run()
@@ -94,6 +95,21 @@ class Routing
 
         call_user_func([new $controller, $function]);
         exit;
+    }
+
+    private function searchInContainerRoute()
+    {
+        if (isset(RouteServiceProvider::$routes[requestMethod()][uri()])) {
+            return uri();
+        }
+
+        foreach ($this->routes as $key => $route) {
+            if (!checkRoute($route)) {
+                continue;
+            }
+
+            return $this->routes[$key];
+        }
     }
 
     private function getUriDataForCreateParamFunction($function, $controller = null)

@@ -28,6 +28,4 @@ if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKe
 |--------------------------------------------------------------------------
 */
 
-\App\Provider\RouteServiceProvider::loadRoutes();
-
-\App\Router\Routing::findRoute()->findRouter()->run();
+\App\Provider\RouteServiceProvider::loadRoutes()->findRoute()->findRouter()->run();
