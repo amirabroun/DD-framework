@@ -10,12 +10,12 @@ class Router
     /**
      * @var string $requestMethod GET|POST|PUT|PATCH|DELETE|ANY
      */
-    public string $requestMethod;
+    public string $requestMethod = '';
 
     /**
      * @var string $route 
      */
-    public string $route;
+    public string $route = '';
 
     /**
      * @var string|null $controller 
@@ -27,45 +27,50 @@ class Router
      */
     public $function;
 
-    public function __construct($requestMethod, $route, $action = null)
+    /**
+     * Create new Router
+     * 
+     * @param string $requestMethod
+     * @param string $route
+     * @param string|array|callable $action
+     */
+    public function __construct(string $requestMethod, string $route, $action = null)
     {
         $this
             ->route($route)
             ->requestMethod($requestMethod)
             ->setAction($action)
-            ->setRouterToServiceProvider();
-
-        // dd($this);
+            ->setToRouteContainer();
     }
 
     /**
      * @param string $controller 
      * 
-     * @return this
+     * @return $this
      */
     public function controller($controller)
     {
         $this->controller = new $controller();
 
-        return $this->setRouterToServiceProvider();
+        return $this->setToRouteContainer();
     }
 
     /**
      * @param string $function 
      * 
-     * @return this
+     * @return $this
      */
     public function function($function)
     {
         $this->function = $function;
 
-        return $this->setRouterToServiceProvider();
+        return $this->setToRouteContainer();
     }
 
     /**
      * @param string $route 
      * 
-     * @return this
+     * @return $this
      */
     public function route(string $route)
     {
@@ -77,7 +82,7 @@ class Router
     /**
      * @param string $requestMethod 
      * 
-     * @return this
+     * @return $this
      */
     public function requestMethod(string $requestMethod)
     {
@@ -89,7 +94,7 @@ class Router
     /**
      * @param string|array|callable|null $action
      * 
-     * @return this
+     * @return $this
      */
     public function setAction(string|array|callable|null $action)
     {
@@ -113,9 +118,11 @@ class Router
     }
 
     /**
-     * @return this
+     * Set requestMethod|route with $this->route to route container
+     * 
+     * @return $this
      */
-    private function setRouterToServiceProvider()
+    private function setToRouteContainer()
     {
         RouteServiceProvider::$routes[$this->requestMethod][$this->route] = $this;
 
