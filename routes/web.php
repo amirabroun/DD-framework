@@ -3,8 +3,8 @@
 use App\Router\Route;
 
 // test
-Route::get('/test/{name}', function ($name) {
-    includePath()->view('/test', ['name' => $name]);
+Route::get('/test/{name}/{id}', function ($name, $id) {
+    includePath()->view('test', ['name' => $name, 'id' => $id]);
 });
 
 // index
