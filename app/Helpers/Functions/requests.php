@@ -73,11 +73,6 @@ function originBaseUrl()
     return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'];
 }
 
-function publicBaseUrl($path = '')
-{
-    return $_SERVER['REQUEST_SCHEME'] . '://' . domain('public') . '/' . ltrim($path, '/');
-}
-
 function adminBaseUrl()
 {
     return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'];
