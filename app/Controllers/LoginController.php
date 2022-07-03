@@ -30,6 +30,6 @@ class LoginController extends Controller
             unset($_SESSION['_admin_log_']);
         }
 
-        redirect()->route('/login/secret/' . md5(secretKey('secret_login')));
+        redirect()->route('/');
     }
 }
