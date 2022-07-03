@@ -28,9 +28,14 @@ class Routing
      */
     private Router $router;
 
+    /**
+     * @var array $uriData
+     */
+    private array $uriData = [];
+
     public function __construct($routes)
     {
-        $this->routes = $routes;
+        $this->routes = $routes[requestMethod()];
     }
 
     /**
@@ -99,52 +104,38 @@ class Routing
 
     private function searchInContainerRoute()
     {
-        if (isset(RouteServiceProvider::$routes[requestMethod()][uri()])) {
+        if (isset($this->routes[uri()])) {
             return uri();
         }
 
         foreach ($this->routes as $key => $route) {
-            if (!checkRoute($route)) {
+            if (!checkRoute($route->route)) {
                 continue;
             }
 
-            return $this->routes[$key];
+            return $key;
         }
     }
 
     private function getUriDataForCreateParamFunction($function, $controller = null)
     {
-        $paramFunctionTypes = ReflectionHelper::findParamFunctionTypes($function, $controller);
+        return ReflectionHelper::findParamFunctionTypes($function, $controller)
+            ->setRequestIfExist()
+            ->setParamFunction($this->setUriData()->uriData)
+            ->getParamFunction();
+    }
 
-        if (!$paramFunctionTypes) {
-            return null;
-        }
-
-        if (str_contains($paramFunctionTypes[0], 'App\\Requests\\')) {
-            $request = $paramFunctionTypes[0];
-            $paramFunction[] = new $request;
-            array_shift($paramFunctionTypes);
-        }
-
+    private function setUriData()
+    {
         $route = explode('/', $this->route);
         $uri = explode('/', uri());
 
-        $paramRoute = [];
         foreach ($route as $key => $partRoute) {
             if (isParamRouteSection($partRoute)) {
-                $paramRoute[] = $uri[$key];
+                $this->uriData[] = $uri[$key];
             }
         }
 
-        foreach ($paramRoute as $key => $partRoute) {
-            if (!isEmpty($paramFunctionTypes[$key])) {
-                $type = $paramFunctionTypes[$key];
-                settype($partRoute, $type);
-            }
-
-            $paramFunction[] = $partRoute;
-        }
-
-        return $paramFunction;
+        return $this;
     }
 }

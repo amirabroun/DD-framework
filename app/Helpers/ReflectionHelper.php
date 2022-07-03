@@ -9,14 +9,26 @@ class ReflectionHelper
 {
 
     /**
+     * @var array $paramFunction
+     */
+    private $paramFunction = [];
+
+    /**
+     * @var array $types
+     */
+    private array $types = [];
+
+    /**
      * Types of param function
      * 
      * @param string|closure $function
      * @param string $controller
-     * @return array $types
+     * @return $this
      */
     public static function findParamFunctionTypes($function, $controller = null)
     {
+        $instance = new static;
+
         if ($controller) {
             $method = new ReflectionMethod($controller, $function);
         } else {
@@ -26,14 +38,44 @@ class ReflectionHelper
         $parameters = $method->getParameters();
 
         if (isEmpty($parameters)) {
-            return null;
+            return $instance;
         }
 
-        $types = [];
         foreach ($parameters as $parameter) {
-            $types[] = (string)$parameter->getType();
+            $instance->types[] = (string)$parameter->getType();
         }
 
-        return $types;
+        return $instance;
+    }
+
+    public function setRequestIfExist()
+    {
+        if (str_contains($this->types[0], 'App\\Requests\\')) {
+            $request = $this->types[0];
+            $this->paramFunction[] = new $request;
+            array_shift($this->types);
+        }
+
+        return $this;
+    }
+
+    public function setParamFunction($data)
+    {
+        foreach ($data as $key => $value) {
+            if (!isEmpty($this->types[$key])) {
+                $type = $this->types[$key];
+
+                settype($value, $type);
+            }
+
+            $this->paramFunction[] = $value;
+        }
+
+        return $this;
+    }
+
+    public function getParamFunction()
+    {
+        return $this->paramFunction;
     }
 }
