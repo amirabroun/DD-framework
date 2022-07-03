@@ -50,10 +50,14 @@ class ReflectionHelper
 
     public function setRequestIfExist()
     {
-        if (str_contains($this->types[0], 'App\\Requests\\')) {
-            $request = $this->types[0];
-            $this->paramFunction[] = new $request;
-            array_shift($this->types);
+        if (!isEmpty($this->types)) {
+            if (str_contains($this->types[0], 'App\\Requests\\')) {
+                $request = $this->types[0];
+
+                $this->paramFunction[] = new $request;
+
+                array_shift($this->types);
+            }
         }
 
         return $this;
