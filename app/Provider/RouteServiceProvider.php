@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     private function boot()
     {
-        return $this->routes('auth.php', 'brand.php', 'category.php', 'product.php', 'web.php');
+        return $this->routes('web.php', 'brand.php', 'category.php', 'product.php', 'auth.php');
     }
 
     /**
