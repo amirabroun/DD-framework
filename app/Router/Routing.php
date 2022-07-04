@@ -2,9 +2,9 @@
 
 namespace App\Router;
 
-use App\Helpers\ReflectionHelper;
-use App\Provider\RouteServiceProvider;
 use Exception;
+use DomainException;
+use App\Helpers\ReflectionHelper;
 
 class Routing
 {
@@ -33,7 +33,12 @@ class Routing
      */
     private array $uriData = [];
 
-    public function __construct($routes)
+    /**
+     * Routing constructor, Get container routes
+     * 
+     * @param array $routes
+     */
+    public function __construct(array $routes)
     {
         $this->routes = $routes[requestMethod()];
     }
@@ -45,7 +50,7 @@ class Routing
      */
     public function findRoute()
     {
-        $this->route = $this->searchInContainerRoute();
+        $this->route = $this->setUriData()->searchInRouteContainer();
 
         return $this;
     }
@@ -57,7 +62,7 @@ class Routing
      */
     public function findRouter()
     {
-        $this->router = RouteServiceProvider::$routes[requestMethod()][$this->route];
+        $this->router = $this->routes[$this->route];
 
         return $this;
     }
@@ -77,12 +82,18 @@ class Routing
             $this->runMethodController($this->router->function, $this->router->controller);
         }
 
-        throw new Exception('Oops! Action is null');
+        throw new Exception('Oops! Action Is Null');
     }
 
+    /**
+     * Run closure
+     * 
+     * @param $function
+     * @return never
+     */
     private function runCallable($function)
     {
-        if ($paramFunction = $this->getUriDataForCreateParamFunction($function)) {
+        if ($paramFunction = $this->getParamFunction($function)) {
             call_user_func_array($function, $paramFunction);
             exit;
         }
@@ -91,18 +102,31 @@ class Routing
         exit;
     }
 
-    private function runMethodController($function, $controller = null)
+    /**
+     * Run method controller
+     * 
+     * @param $method
+     * @param $controller
+     * @return never
+     */
+    private function runMethodController($method, $controller)
     {
-        if ($paramFunction = $this->getUriDataForCreateParamFunction($function, $controller)) {
-            call_user_func_array([new $controller, $function], $paramFunction);
+        if ($paramFunction = $this->getParamFunction($method, $controller)) {
+            call_user_func_array([new $controller, $method], $paramFunction);
             exit;
         }
 
-        call_user_func([new $controller, $function]);
+        call_user_func([new $controller, $method]);
         exit;
     }
 
-    private function searchInContainerRoute()
+    /**
+     * Search in route container and get route if does exist
+     * 
+     * @return string $route
+     * @return DomainException
+     */
+    private function searchInRouteContainer()
     {
         if (isset($this->routes[uri()])) {
             return uri();
@@ -115,16 +139,30 @@ class Routing
 
             return $key;
         }
+
+        throw new DomainException("-- : Route '" . uri() . "' Does Not Exist : --");
     }
 
-    private function getUriDataForCreateParamFunction($function, $controller = null)
+    /**
+     * Set all uri data to parameter function 
+     * 
+     * @param $function
+     * @param $controller
+     * @return array $parameterFunction
+     */
+    private function getParamFunction($function, $controller = null)
     {
         return ReflectionHelper::findParamFunctionTypes($function, $controller)
             ->setRequestIfExist()
-            ->setParamFunction($this->setUriData()->uriData)
+            ->setParamFunction($this->uriData)
             ->getParamFunction();
     }
 
+    /**
+     * Get uri data and set $this->uriData
+     * 
+     * @return $this
+     */
     private function setUriData()
     {
         $route = explode('/', $this->route);
