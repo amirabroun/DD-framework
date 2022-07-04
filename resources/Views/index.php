@@ -40,12 +40,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Notification</a>
                 </li>
-                <li class="nav-item">
-                    <form method="post" action="log-out">
-                        <input type="hidden">
-                        <a class="nav-link" onclick="this.parentNode.submit();">Exit</a>
-                    </form>
-                </li>
+                <? if (isset($_SESSION["_admin_log_"])) { ?>
+                    <li class="nav-item">
+                        <form method="post" action="log-out">
+                            <input type="hidden">
+                            <a class="nav-link" onclick="this.parentNode.submit();">Exit</a>
+                        </form>
+                    </li>
+                <?
+                } else { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login/secret/e10adc3949ba59abbe56e057f20f883e">Login</a>
+                    </li>
+                <?
+                } ?>
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2 rounded-0" type="search" placeholder="Search" aria-label="Search">
