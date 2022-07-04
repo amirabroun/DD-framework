@@ -18,10 +18,6 @@ if (empty($_SESSION)) {
     session_start();
 }
 
-if (isset($_SESSION["_admin_log_"]) && uri() === ('login/secret/' . md5(secretKey('secret_login')))) {
-    redirect()->route('/');
-}
-
 /*
 |--------------------------------------------------------------------------
 | Require Routes
