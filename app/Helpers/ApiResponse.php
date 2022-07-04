@@ -45,7 +45,7 @@ class ApiResponse
      */
     public function setMessage(array $message)
     {
-        $this->message = $this->prepareArrayToString($message);
+        $this->message = $this->prepareMessage($message);
 
         return $this;
     }
@@ -55,7 +55,7 @@ class ApiResponse
      *
      * @return string 
      */
-    public function prepareArrayToString(array $errors)
+    public function prepareMessage(array $errors)
     {
         $ruleAttributes = ruleAttributes();
         $rules = '';
