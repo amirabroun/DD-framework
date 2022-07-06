@@ -50,7 +50,9 @@ class Routing
      */
     public function findRoute()
     {
-        $this->route = $this->setUriData()->searchInRouteContainer();
+        $this->route = $this->searchInRouteContainer();
+
+        $this->setUriData();
 
         return $this;
     }
