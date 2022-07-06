@@ -3,68 +3,58 @@
 namespace App\Models;
 
 use App\DataBase\DataBase;
-use PDO;
-use PDOStatement;
 
 class Model
 {
+
     protected array $fillable = [];
-    
-    private PDOStatement $sql;
-    private PDO $action;
 
-    public function __construct($sql)
+    protected string $table = '';
+
+    protected string $query = '';
+
+    protected \PDO $PDO;
+
+    public function __construct()
     {
-        $this->sql = self::prepareSQL($sql);
+        $this->PDO = (new DataBase)->getConnected();
     }
 
-    public static function prepareSQL($sql)
+    public static function query()
     {
-        return (new DataBase)->cn->prepare($sql);
+        $instance = new static;
+
+        $instance->table = $instance->getTableName($instance);
+
+        return $instance;
     }
 
-    public function bindValue($values)
+    public function where($column, $op, $value)
     {
-        if (is_array($values)) {
-            foreach ($values as $key => $value) {
-                $this->sql->bindValue($key + 1, $value);
-            }
-        } else {
-            $this->sql->bindValue(1, $values);
+        $this->query .=  "where $column $op $value";
+
+        return $this;
+    }
+
+    public function get($column = ['*'])
+    {
+        $selected = '';
+
+        foreach ($column as $c) {
+            $selected .= "$c|";
         }
+
+        $selected = str_replace('|', ', ', trim($selected, '|'));
+
+        $this->query = "SELECT $selected From `$this->table` " . $this->query . ';';
+
+        return $this;
     }
 
-    public function execute($values = null)
+    private function getTableName($model)
     {
-        if ($values) {
-            $this->bindValue($values);
-        }
+        $table = pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
 
-        return $this->sql->execute();
-    }
-
-    public function rowCount()
-    {
-        return $this->sql->rowCount();
-    }
-
-    public function fetchObject()
-    {
-        return $this->sql->fetch(PDO::FETCH_OBJ);
-    }
-
-    public function fetchAllObject()
-    {
-        return $this->sql->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    public function fetchArray()
-    {
-        return $this->sql->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function lastInsertId()
-    {
-        return $this->action->lastInsertId();
+        return $table;
     }
 }

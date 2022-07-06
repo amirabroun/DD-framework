@@ -8,7 +8,7 @@ use PDO;
 class DataBase
 {
 
-    public PDO $cn;
+    private PDO $cn;
 
     public function __construct()
     {
@@ -30,5 +30,10 @@ class DataBase
         } catch (PDOException $error) {
             die($error->getMessage());
         }
+    }
+
+    public function getConnected()
+    {
+        return $this->cn;
     }
 }

@@ -4,7 +4,7 @@ use App\Router\Route;
 
 // test
 Route::get('/test/{name}/{id}', function ($name, $id) {
-    includePath()->view('test', ['name' => $name, 'id' => $id]);
+    dd(App\Models\Admin::query()->where('name', '=', 'amir')->get(['name', 'title', 'id', 'uuid']));
 });
 
 // index
