@@ -1,15 +1,17 @@
 <?php
 
+use App\Models\{Admin, Category, User};
 use App\Router\Route;
 
 // test
 Route::get('/test', function () {
-    $categoreis = App\Models\Category::query()->where('title', '=', 'admin')->andWhere('id', '=', '3')->get();
-    $user = App\Models\User::find(81);
-    $admin = App\Models\Admin::query()->where('username', '=', 'admin')->first();
-    $users = App\Models\User::all(['id', 'last_name', 'mobile']);
+    $categoreis = Category::query()->where('title', '=', 'admin')->andWhere('id', '=', '3')->get();
+    $user = User::find(81);
+    $admin = Admin::query()->where('username', '=', 'admin')->first();
+    $users = User::all(['id', 'last_name', 'mobile']);
+    $adminLogin = Admin::login('admin', 12345678);
 
-    dd($users, $admin, $user, $categoreis);
+    dd($adminLogin, $users, $admin, $user, $categoreis);
 });
 
 // index
