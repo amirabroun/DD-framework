@@ -219,6 +219,30 @@ function pluralize($word)
     return $word;
 }
 
+function getTableName($model)
+{
+    $table = pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
+
+    return $table;
+}
+
+function select($column = ['*'])
+{
+    if ($column == ['*']) {
+        return '*';
+    }
+
+    $selected = '';
+
+    foreach ($column as $c) {
+        $selected .= "$c|";
+    }
+
+    $selected = str_replace('|', ', ', trim($selected, '|'));
+
+    return $selected;
+}
+
 if (isset($_SESSION['message'])) { ?>
     <script>
         Swal.fire({

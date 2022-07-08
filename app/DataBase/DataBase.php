@@ -8,7 +8,9 @@ use PDO;
 class DataBase
 {
 
-    private PDO $cn;
+    private PDO $PDO;
+
+    private string $query = '';
 
     public function __construct()
     {
@@ -26,14 +28,46 @@ class DataBase
         ];
 
         try {
-            $this->cn = new PDO($dsn, $username, $password, $options);
+            $this->PDO = new PDO($dsn, $username, $password, $options);
         } catch (PDOException $error) {
             die($error->getMessage());
         }
     }
 
-    public function getConnected()
+    public static function connected()
     {
-        return $this->cn;
+        $instance = new static;
+
+        return $instance;
+    }
+
+    public function exe()
+    {
+        $exe = $this->PDO->prepare($this->query);
+
+        $exe->execute();
+
+        return $exe;
+    }
+
+    public function query(string $query = '')
+    {
+        $this->query = $query . $this->query;
+
+        return $this;
+    }
+
+    public function where(string $query)
+    {
+        $this->query .= $query;
+
+        return $this;
+    }
+
+    public function take(int $limit)
+    {
+        $this->query .= " LIMIT $limit";
+
+        return $this;
     }
 }
