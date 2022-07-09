@@ -8,11 +8,11 @@ use PDO;
 class DataBase
 {
 
-    private PDO $PDO;
+    public static PDO $PDO;
 
     private string $query = '';
 
-    public function __construct()
+    public static function connected()
     {
         $host = getenv("DB_HOST");
         $port = getenv("DB_PORT");
@@ -28,24 +28,21 @@ class DataBase
         ];
 
         try {
-            $this->PDO = new PDO($dsn, $username, $password, $options);
+            static::$PDO = new PDO($dsn, $username, $password, $options);
         } catch (PDOException $error) {
             die($error->getMessage());
         }
     }
 
-    public static function connected()
+    public function exe($queryType = 'select')
     {
-        $instance = new static;
-
-        return $instance;
-    }
-
-    public function exe()
-    {
-        $exe = $this->PDO->prepare($this->query);
+        $exe = static::$PDO->prepare($this->query);
 
         $exe->execute();
+
+        if ($queryType == 'insert') {
+            return static::$PDO->lastInsertId();
+        }
 
         return $exe;
     }
