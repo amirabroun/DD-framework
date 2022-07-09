@@ -219,7 +219,7 @@ function pluralize($word)
     return $word;
 }
 
-function getTableName($model)
+function getTableName(object $model)
 {
     $table = pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
 
