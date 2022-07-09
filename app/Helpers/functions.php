@@ -219,8 +219,12 @@ function pluralize($word)
     return $word;
 }
 
-function getTableName(object $model)
+function getTableName(object|string $model)
 {
+    if (is_string($model)) {
+        return pluralize($model);
+    }
+
     $table = pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
 
     return $table;
