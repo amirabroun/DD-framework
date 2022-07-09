@@ -79,4 +79,21 @@ class ReflectionHelper
     {
         return $this->paramFunction;
     }
+
+    public static function getDynamicObjectProperties(object $object)
+    {
+        $reflection = new \ReflectionObject($object);
+
+        $properties = $reflection->getProperties();
+        $defaultProperties = array_keys($reflection->getDefaultProperties());
+
+        $vars = [];
+        foreach ($properties as $property) {
+            if (!in_array($property->getName(), $defaultProperties)) {
+                $vars[$property->getName()] = $object->{$property->getName()};
+            }
+        }
+
+        return $vars;
+    }
 }
