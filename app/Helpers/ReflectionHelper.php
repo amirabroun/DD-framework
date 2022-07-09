@@ -2,9 +2,6 @@
 
 namespace App\Helpers;
 
-use ReflectionFunction;
-use ReflectionMethod;
-
 class ReflectionHelper
 {
 
@@ -30,9 +27,9 @@ class ReflectionHelper
         $instance = new static;
 
         if ($controller) {
-            $method = new ReflectionMethod($controller, $function);
+            $method = new \ReflectionMethod($controller, $function);
         } else {
-            $method = new ReflectionFunction($function);
+            $method = new \ReflectionFunction($function);
         }
 
         $parameters = $method->getParameters();
