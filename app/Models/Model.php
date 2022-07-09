@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\DataBase\DataBase;
 use PDO;
+use App\Helpers\ReflectionHelper;
 
 class Model
 {
@@ -16,31 +17,34 @@ class Model
 
     public static function query()
     {
-        $instance = new static(static::class);
+        $instance = new static;
 
-        $instance->connected = DataBase::connected();
+        return $instance->setConnected()->setTable();
+    }
 
-        $instance->table = getTableName($instance);
+    public static function create($attributes = [])
+    {
+        $instance = new static;
 
-        return $instance;
+        return $instance->setConnected()->setTable()->setAttributesToObject($attributes);
     }
 
     public function get($column = ['*'])
     {
         $this->connected->query('SELECT ' . select($column) . " FROM $this->table");
 
-        $this->setAttributes($this->connected->exe()->fetchAll(PDO::FETCH_OBJ));
+        $attributes = $this->connected->exe()->fetchAll(PDO::FETCH_OBJ);
 
-        return $this;
+        return $this->setAttributesToObject($attributes);
     }
 
     public function first($column = ['*'])
     {
         $this->connected->query('SELECT ' . select($column) . " FROM $this->table ")->take(1);
 
-        $this->setAttributes($this->connected->exe()->fetch(PDO::FETCH_OBJ));
+        $attributes = $this->connected->exe()->fetch(PDO::FETCH_OBJ);
 
-        return $this;
+        return $this->setAttributesToObject($attributes);
     }
 
     public static function find($id, $select = ['*'])
@@ -67,12 +71,48 @@ class Model
         return $this;
     }
 
-    protected function setAttributes($object)
+    public function save()
     {
-        if ($object) {
-            foreach ((object) $object as $var => $value) {
-                $this->{$var} = $value;
-            }
+        $attributes = ReflectionHelper::getDynamicObjectProperties($this);
+
+        return $this->new($attributes)->find($this->connected->exe('insert'));
+    }
+
+    private function new($attributes)
+    {
+        $COLUMN = "(" . implode(", ", array_keys($attributes)) . ")";
+
+        $VALUES = "('" . implode("', '", array_values($attributes)) . "')";
+
+        $this->connected->query("INSERT INTO `$this->table` $COLUMN VALUES $VALUES; ");
+
+        return $this;
+    }
+
+    protected function setAttributesToObject(object|array|null $object)
+    {
+        if (!$object) {
+            return;
         }
+
+        foreach ((object) $object as $var => $value) {
+            $this->{$var} = $value;
+        }
+
+        return $this;
+    }
+
+    private function setTable()
+    {
+        $this->table = getTableName($this);
+
+        return $this;
+    }
+
+    private function setConnected()
+    {
+        $this->connected = new DataBase;
+
+        return $this;
     }
 }
