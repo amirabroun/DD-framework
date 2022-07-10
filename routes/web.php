@@ -6,6 +6,13 @@ use App\Router\Route;
 
 // test
 Route::get('/test', function () {
+    $newUserFromConstructor = new User;
+
+    $newUserFromConstructor->first_name = 'yaser';
+    $newUserFromConstructor->last_name = 'nasiri';
+    $newUserFromConstructor->mobile = '0928381';
+    $newUserFromConstructor->save();
+
     $Jon = Builder::table('users')
         ->select(['id', 'first_name'])
         ->where('id', '<', 12)
@@ -36,6 +43,7 @@ Route::get('/test', function () {
     $adminLogin = Admin::login('admin', 12345678);
 
     dd(
+        $newUserFromConstructor,
         User::all(),
         $Jon,
         $newUser,
