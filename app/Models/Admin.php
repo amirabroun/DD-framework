@@ -14,7 +14,7 @@ class Admin extends Model
 
     public static function login($username, $password)
     {
-        $admin = parent::query()->where('username', '=', $username)->first();
+        $admin = static::query()->where('username', '=', $username)->first();
 
         if (!bcrypt($password, $admin->password ?? null)) {
             return false;
