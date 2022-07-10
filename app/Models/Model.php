@@ -20,13 +20,13 @@ class Model extends Builder
     /**
      * New query
      * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public static function query()
     {
         $instance = new static;
 
-        $instance->setConnected()->setTable();
+        $instance->setTable();
 
         return $instance;
     }
@@ -34,13 +34,13 @@ class Model extends Builder
     /**
      * New record
      * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public static function create(array $attributes = [])
     {
         $instance = new static;
 
-        $instance->setConnected()->setTable()->new($attributes);
+        $instance->setTable()->new($attributes);
 
         return $instance;
     }
@@ -48,7 +48,7 @@ class Model extends Builder
     /**
      * Find by <int> id
      * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public static function find(int $id, array $select = ['*'])
     {
@@ -56,8 +56,7 @@ class Model extends Builder
     }
 
     /**
-     * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public static function all(array $select = ['*'])
     {
@@ -65,8 +64,7 @@ class Model extends Builder
     }
 
     /**
-     * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public function get(array $column = ['*'])
     {
@@ -74,23 +72,29 @@ class Model extends Builder
 
         parent::get();
 
-        return get_object_vars($this);
+        return $this;
     }
 
     /**
-     * 
-     * @return Builder|Model $this
+     * @return Model $this
      */
     public function save()
     {
         $this->find(parent::save()->id);
 
-        return get_object_vars($this);
+        return $this;
     }
 
     /**
-     * 
-     * @return Builder|Model $this
+     * @return bool
+     */
+    public function delete()
+    {
+        return parent::delete();
+    }
+
+    /**
+     * @return Model $this
      */
     public function first($column = ['*'])
     {
@@ -98,6 +102,6 @@ class Model extends Builder
 
         parent::get();
 
-        return get_object_vars($this);
+        return $this;
     }
 }

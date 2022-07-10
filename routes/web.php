@@ -6,8 +6,10 @@ use App\Router\Route;
 
 // test
 Route::get('/test', function () {
-    $newUserFromConstructor = new User;
+    $user = User::find(87);
+    $user->delete();
 
+    $newUserFromConstructor = new User;
     $newUserFromConstructor->first_name = 'yaser';
     $newUserFromConstructor->last_name = 'nasiri';
     $newUserFromConstructor->mobile = '0928381';

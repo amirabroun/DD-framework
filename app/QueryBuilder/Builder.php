@@ -2,16 +2,13 @@
 
 namespace App\QueryBuilder;
 
-use PDO;
 use App\DataBase\DataBase;
 use App\Helpers\ReflectionHelper;
 
-class Builder
+class Builder extends DataBase
 {
 
-    private DataBase $connected;
-
-    private string $select = '*';
+    private string $column = '*';
 
     private string $where = '';
 
@@ -21,7 +18,7 @@ class Builder
 
     public function __construct()
     {
-        $this->setConnected()->setTable();
+        $this->setTable();
     }
 
     /**
@@ -31,7 +28,7 @@ class Builder
     {
         $instance = new static;
 
-        $instance->setTable($tableName)->setConnected();
+        $instance->setTable($tableName);
 
         return $instance;
     }
@@ -41,7 +38,7 @@ class Builder
      */
     public function select(array $column = ['*'])
     {
-        $this->select = select($column);
+        $this->column = select($column);
 
         return $this;
     }
@@ -102,18 +99,11 @@ class Builder
      */
     public function get()
     {
-        $query = "SELECT "
-            . $this->select
-            . " FROM "
-            . $this->table
-            . $this->where
-            . $this->limit;
+        $exe = $this->exe(
+            "SELECT " . $this->column . " FROM " . $this->table . $this->where . $this->limit
+        );
 
-        $exe = $this->connected->exe($query);
-
-        $attributes = $this->limit == " LIMIT 1" ?
-            $exe->fetch(PDO::FETCH_OBJ) :
-            $exe->fetchAll(PDO::FETCH_OBJ);
+        $attributes = $this->limit == " LIMIT 1" ? $exe->fetch() : $exe->fetchAll();
 
         return $this->setAttributesToObject($attributes);
     }
@@ -121,7 +111,7 @@ class Builder
     /**
      * Build sql INSERT code
      * 
-     * 
+     * @return $this
      */
     public function save()
     {
@@ -131,33 +121,31 @@ class Builder
 
         $VALUES = "('" . implode("', '", array_values($attributes)) . "')";
 
-        $query = 'INSERT INTO '
-            . $this->table . ' '
-            . $COLUMN
-            . ' VALUES '
-            . $VALUES;
+        $this->exe(
+            'INSERT INTO ' . $this->table . ' ' . $COLUMN . ' VALUES ' . $VALUES
+        );
 
-        $this->connected->exe($query);
-
-        $this->id = DataBase::$PDO->lastInsertId();
+        $this->id = parent::$PDO->lastInsertId();
 
         return $this;
     }
 
     /**
-     * @return $this
+     * Delete record
+     * 
+     * @return bool
      */
-    protected function setConnected()
+    public function delete()
     {
-        $this->connected = new DataBase;
-
-        return $this;
+        return $this->exe(
+            'DELETE FROM ' . $this->table . $this->where
+        )->rowCount() == 1;
     }
 
     /**
      * @return $this
      */
-    protected function setAttributesToObject(object|array|null $object)
+    protected function setAttributesToObject(object|array|null|bool $object)
     {
         if (!$object) {
             return $this;

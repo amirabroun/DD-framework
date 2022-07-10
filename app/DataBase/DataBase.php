@@ -8,7 +8,7 @@ use PDO;
 class DataBase
 {
 
-    public static PDO $PDO;
+    protected static PDO $PDO;
 
     public static function connected()
     {
@@ -34,9 +34,7 @@ class DataBase
 
     public function exe(string $query)
     {
-        $exe = static::$PDO->prepare($query);
-
-        $exe->execute();
+        $exe = static::$PDO->query($query, PDO::FETCH_OBJ);
 
         return $exe;
     }
