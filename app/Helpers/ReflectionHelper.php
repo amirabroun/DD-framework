@@ -84,7 +84,7 @@ class ReflectionHelper
     {
         $reflection = new \ReflectionObject($object);
 
-        $properties = $reflection->getProperties();
+        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
         $defaultProperties = array_keys($reflection->getDefaultProperties());
 
         $vars = [];
