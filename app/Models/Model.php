@@ -2,117 +2,102 @@
 
 namespace App\Models;
 
-use App\DataBase\DataBase;
-use PDO;
-use App\Helpers\ReflectionHelper;
+use App\QueryBuilder\Builder;
 
-class Model
+class Model extends Builder
 {
 
-    private DataBase $connected;
-
+    /**
+     * @var string $table
+     */
     protected string $table = '';
 
+    /**
+     * @var array $fillable
+     */
     protected array $fillable = [];
 
+    /**
+     * New query
+     * 
+     * @return Builder|Model $this
+     */
     public static function query()
     {
         $instance = new static;
 
-        return $instance->setConnected()->setTable();
+        $instance->setConnected()->setTable();
+
+        return $instance;
     }
 
-    public static function create($attributes = [])
+    /**
+     * New record
+     * 
+     * @return Builder|Model $this
+     */
+    public static function create(array $attributes = [])
     {
         $instance = new static;
 
-        return $instance->setConnected()->setTable()->setAttributesToObject($attributes);
+        $instance->setConnected()->setTable()->new($attributes);
+
+        return $instance;
     }
 
-    public function get($column = ['*'])
-    {
-        $this->connected->query('SELECT ' . select($column) . " FROM $this->table");
-
-        $attributes = $this->connected->exe()->fetchAll(PDO::FETCH_OBJ);
-
-        return $this->setAttributesToObject($attributes);
-    }
-
-    public function first($column = ['*'])
-    {
-        $this->connected->query('SELECT ' . select($column) . " FROM $this->table ")->take(1);
-
-        $attributes = $this->connected->exe()->fetch(PDO::FETCH_OBJ);
-
-        return $this->setAttributesToObject($attributes);
-    }
-
-    public static function find($id, $select = ['*'])
+    /**
+     * Find by <int> id
+     * 
+     * @return Builder|Model $this
+     */
+    public static function find(int $id, array $select = ['*'])
     {
         return static::query()->where('id', '=', $id)->first($select);
     }
 
-    public static function all($select = ['*'])
+    /**
+     * 
+     * @return Builder|Model $this
+     */
+    public static function all(array $select = ['*'])
     {
         return static::query()->get($select);
     }
 
-    public function where($column, $operator, $value)
+    /**
+     * 
+     * @return Builder|Model $this
+     */
+    public function get(array $column = ['*'])
     {
-        $this->connected->where(" WHERE $column $operator '$value'");
+        $this->select($column);
 
-        return $this;
+        parent::get();
+
+        return get_object_vars($this);
     }
 
-    public function andWhere($column, $operator, $value)
-    {
-        $this->connected->where(" AND $column $operator '$value'");
-
-        return $this;
-    }
-
+    /**
+     * 
+     * @return Builder|Model $this
+     */
     public function save()
     {
-        $attributes = ReflectionHelper::getDynamicObjectProperties($this);
+        $this->find(parent::save()->id);
 
-        return $this->new($attributes)->find($this->connected->exe('insert'));
+        return get_object_vars($this);
     }
 
-    private function new($attributes)
+    /**
+     * 
+     * @return Builder|Model $this
+     */
+    public function first($column = ['*'])
     {
-        $COLUMN = "(" . implode(", ", array_keys($attributes)) . ")";
+        $this->select($column)->take(1);
 
-        $VALUES = "('" . implode("', '", array_values($attributes)) . "')";
+        parent::get();
 
-        $this->connected->query("INSERT INTO `$this->table` $COLUMN VALUES $VALUES; ");
-
-        return $this;
-    }
-
-    protected function setAttributesToObject(object|array|null $object)
-    {
-        if (!$object) {
-            return;
-        }
-
-        foreach ((object) $object as $var => $value) {
-            $this->{$var} = $value;
-        }
-
-        return $this;
-    }
-
-    private function setTable()
-    {
-        $this->table = getTableName($this);
-
-        return $this;
-    }
-
-    private function setConnected()
-    {
-        $this->connected = new DataBase;
-
-        return $this;
+        return get_object_vars($this);
     }
 }
