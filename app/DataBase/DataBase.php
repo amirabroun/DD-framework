@@ -10,8 +10,6 @@ class DataBase
 
     public static PDO $PDO;
 
-    private string $query = '';
-
     public static function connected()
     {
         $host = getenv("DB_HOST");
@@ -34,37 +32,12 @@ class DataBase
         }
     }
 
-    public function exe($queryType = 'select')
+    public function exe(string $query)
     {
-        $exe = static::$PDO->prepare($this->query);
+        $exe = static::$PDO->prepare($query);
 
         $exe->execute();
 
-        if ($queryType == 'insert') {
-            return static::$PDO->lastInsertId();
-        }
-
         return $exe;
-    }
-
-    public function query(string $query = '')
-    {
-        $this->query = $query . $this->query;
-
-        return $this;
-    }
-
-    public function where(string $query)
-    {
-        $this->query .= $query;
-
-        return $this;
-    }
-
-    public function take(int $limit)
-    {
-        $this->query .= " LIMIT $limit";
-
-        return $this;
     }
 }
