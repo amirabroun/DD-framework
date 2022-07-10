@@ -19,6 +19,11 @@ class Builder
 
     protected string $table = '';
 
+    public function __construct()
+    {
+        $this->setConnected()->setTable();
+    }
+
     /**
      * @return $this
      */
