@@ -2,36 +2,25 @@
 
 namespace App\Router;
 
-class Route 
+/**
+ * @method static Router get(string $route, $action = null) 
+ * @method static Router post(string $route, $action = null) 
+ * @method static Router put(string $route, $action = null) 
+ * @method static Router patch(string $route, $action = null) 
+ * @method static Router delete(string $route, $action = null) 
+ * 
+ * @see Router
+ */
+class Route extends Router
 {
 
-    public static function get(string $route, $action = null)
+    /**
+     * New router
+     * 
+     * @return Router 
+     */
+    public static function __callStatic(string $method, $action = null)
     {
-        return new Router(__FUNCTION__, $route, $action);
-    }
-
-    public static function post(string $route, $action = null)
-    {
-        return new Router(__FUNCTION__, $route, $action);
-    }
-
-    public static function put(string $route, $action = null)
-    {
-        return new Router(__FUNCTION__, $route, $action);
-    }
-
-    public static function patch(string $route, $action = null)
-    {
-        return new Router(__FUNCTION__, $route, $action);
-    }
-
-    public static function delete(string $route, $action = null)
-    {
-        return new Router(__FUNCTION__, $route, $action);
-    }
-
-    public static function any(string $route, $action = null)
-    {
-        return new Router(__FUNCTION__, $route, $action);
+        return new Router($method, ...$action);
     }
 }
