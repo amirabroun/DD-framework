@@ -13,7 +13,7 @@ class LoginController extends Controller
     {
         $admin = $request->validated();
 
-        if (!$admin = Admin::doLogin($admin->username, $admin->password)) {
+        if (!$admin = Admin::login($admin->username, $admin->password)) {
             includePath()->view('auth.login', [
                 'error' => 'Incurrect username or password'
             ]);
