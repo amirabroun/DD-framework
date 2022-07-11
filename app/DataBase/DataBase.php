@@ -8,9 +8,9 @@ use PDO;
 class DataBase
 {
 
-    public PDO $cn;
+    protected static PDO $PDO;
 
-    public function __construct()
+    public static function connected()
     {
         $host = getenv("DB_HOST");
         $port = getenv("DB_PORT");
@@ -26,9 +26,16 @@ class DataBase
         ];
 
         try {
-            $this->cn = new PDO($dsn, $username, $password, $options);
+            static::$PDO = new PDO($dsn, $username, $password, $options);
         } catch (PDOException $error) {
             die($error->getMessage());
         }
+    }
+
+    public function exe(string $query)
+    {
+        $exe = static::$PDO->query($query, PDO::FETCH_OBJ);
+
+        return $exe;
     }
 }

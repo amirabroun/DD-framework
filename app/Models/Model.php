@@ -2,69 +2,106 @@
 
 namespace App\Models;
 
-use App\DataBase\DataBase;
-use PDO;
-use PDOStatement;
+use App\QueryBuilder\Builder;
 
-class Model
+class Model extends Builder
 {
+
+    /**
+     * @var string $table
+     */
+    protected string $table = '';
+
+    /**
+     * @var array $fillable
+     */
     protected array $fillable = [];
-    
-    private PDOStatement $sql;
-    private PDO $action;
 
-    public function __construct($sql)
+    /**
+     * New query
+     * 
+     * @return Model $this
+     */
+    public static function query()
     {
-        $this->sql = self::prepareSQL($sql);
+        $instance = new static;
+
+        $instance->setTable();
+
+        return $instance;
     }
 
-    public static function prepareSQL($sql)
+    /**
+     * New record
+     * 
+     * @return Model $this
+     */
+    public static function create(array $attributes = [])
     {
-        return (new DataBase)->cn->prepare($sql);
+        $instance = new static;
+
+        $instance->setTable()->new($attributes);
+
+        return $instance;
     }
 
-    public function bindValue($values)
+    /**
+     * Find by <int> id
+     * 
+     * @return Model $this
+     */
+    public static function find(int $id, array $select = ['*'])
     {
-        if (is_array($values)) {
-            foreach ($values as $key => $value) {
-                $this->sql->bindValue($key + 1, $value);
-            }
-        } else {
-            $this->sql->bindValue(1, $values);
-        }
+        return static::query()->where('id', '=', $id)->first($select);
     }
 
-    public function execute($values = null)
+    /**
+     * @return Model $this
+     */
+    public static function all(array $select = ['*'])
     {
-        if ($values) {
-            $this->bindValue($values);
-        }
-
-        return $this->sql->execute();
+        return static::query()->get($select);
     }
 
-    public function rowCount()
+    /**
+     * @return Model $this
+     */
+    public function get(array $column = ['*'])
     {
-        return $this->sql->rowCount();
+        $this->select($column);
+
+        parent::get();
+
+        return $this;
     }
 
-    public function fetchObject()
+    /**
+     * @return Model $this
+     */
+    public function save()
     {
-        return $this->sql->fetch(PDO::FETCH_OBJ);
+        $this->find(parent::save()->id);
+
+        return $this;
     }
 
-    public function fetchAllObject()
+    /**
+     * @return bool
+     */
+    public function delete()
     {
-        return $this->sql->fetchAll(PDO::FETCH_OBJ);
+        return parent::delete();
     }
 
-    public function fetchArray()
+    /**
+     * @return Model $this
+     */
+    public function first($column = ['*'])
     {
-        return $this->sql->fetch(PDO::FETCH_ASSOC);
-    }
+        $this->select($column)->take(1);
 
-    public function lastInsertId()
-    {
-        return $this->action->lastInsertId();
+        parent::get();
+
+        return $this;
     }
 }

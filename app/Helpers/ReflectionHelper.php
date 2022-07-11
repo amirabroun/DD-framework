@@ -2,9 +2,6 @@
 
 namespace App\Helpers;
 
-use ReflectionFunction;
-use ReflectionMethod;
-
 class ReflectionHelper
 {
 
@@ -30,9 +27,9 @@ class ReflectionHelper
         $instance = new static;
 
         if ($controller) {
-            $method = new ReflectionMethod($controller, $function);
+            $method = new \ReflectionMethod($controller, $function);
         } else {
-            $method = new ReflectionFunction($function);
+            $method = new \ReflectionFunction($function);
         }
 
         $parameters = $method->getParameters();
@@ -81,5 +78,22 @@ class ReflectionHelper
     public function getParamFunction()
     {
         return $this->paramFunction;
+    }
+
+    public static function getDynamicObjectProperties(object $object)
+    {
+        $reflection = new \ReflectionObject($object);
+
+        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $defaultProperties = array_keys($reflection->getDefaultProperties());
+
+        $vars = [];
+        foreach ($properties as $property) {
+            if (!in_array($property->getName(), $defaultProperties)) {
+                $vars[$property->getName()] = $object->{$property->getName()};
+            }
+        }
+
+        return $vars;
     }
 }

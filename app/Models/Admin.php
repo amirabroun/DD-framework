@@ -5,31 +5,21 @@ namespace App\Models;
 
 class Admin extends Model
 {
-    public static function doLogin($username, $password)
+
+    protected array $fillable = [
+        'first_name', 'last_name', 'mobile',
+        'username', 'password',
+        'status', 'created_at', 'updated_at'
+    ];
+
+    public static function login($username, $password)
     {
-        $action = new Model("SELECT * From admins where username = ? LIMIT 1");
-        $action->execute($username);
+        $admin = static::query()->where('username', '=', $username)->first();
 
-        if (!($action->rowCount() > 0))
-            return false;
-
-        $admin = $action->fetchObject();
-        if (!bcrypt($password, $admin->password))
-            return false;
-
-        return $admin;
-    }
-
-    public static function getAdmin($id)
-    {
-        $action = new Model("SELECT * From admins where id = ? LIMIT 1");
-
-        $action->execute($id);
-
-        if (!($action->rowCount() > 0)) {
+        if (!bcrypt($password, $admin->password ?? null)) {
             return false;
         }
 
-        return $action->fetchObject();
+        return $admin;
     }
 }
