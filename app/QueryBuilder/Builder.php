@@ -174,7 +174,7 @@ class Builder extends DataBase
      */
     protected function setTable($tableOrModel = null)
     {
-        $this->table = getTableName($tableOrModel ?? $this);
+        !($this->table == '') ?: $this->table = getTableName($tableOrModel ?? $this);
 
         return $this;
     }
