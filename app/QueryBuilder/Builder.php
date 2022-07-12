@@ -130,6 +130,17 @@ class Builder extends DataBase
         return $this;
     }
 
+    public function update()
+    {
+        $attributes = ReflectionHelper::getDynamicObjectProperties($this);
+
+        $this->exe(
+            'UPDATE ' . $this->table . ' SET ' . setValuseToColumn($attributes) . $this->where
+        );
+
+        return $this;
+    }
+
     /**
      * Delete record
      * 
