@@ -1,11 +1,14 @@
 <?php
 
-use App\Models\{Admin, Category, User};
+use App\Models\{Admin, Category, CategoryProduct, User};
 use App\QueryBuilder\Builder;
 use App\Router\Route;
 
 // test
 Route::get('/test', function () {
+    $categoryProduct = new CategoryProduct;
+    $categoryProduct; // table = category_product
+
     $user = User::find(95)->new(['mobile' => '0000000']);
     $user->first_name = 'amirrr';
     $user->update();
