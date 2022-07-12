@@ -6,6 +6,10 @@ use App\Router\Route;
 
 // test
 Route::get('/test', function () {
+    $user = User::find(95)->new(['mobile' => '0000000']);
+    $user->first_name = 'amirrr';
+    $user->update();
+
     $user = User::find(87);
     $user->delete();
 

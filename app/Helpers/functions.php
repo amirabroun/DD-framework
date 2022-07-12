@@ -247,6 +247,21 @@ function select($column = ['*'])
     return $selected;
 }
 
+function setValuseToColumn(array $attributes, $ignore = null)
+{
+    $updateQuery = '';
+
+    foreach ($attributes as $column => $value) {
+        if (isEmpty($value) || $column == 'id' || $column == $ignore) {
+            continue;
+        }
+
+        $updateQuery .= $column . ' = ' . "'$value'" . ', ';
+    }
+
+    return trim($updateQuery, ', ');
+}
+
 if (isset($_SESSION['message'])) { ?>
     <script>
         Swal.fire({
