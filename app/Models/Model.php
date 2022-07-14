@@ -75,6 +75,8 @@ class Model extends Builder
      */
     public function save()
     {
+        $this->setTable($this);
+
         $this->find(parent::save()->id);
 
         return $this;
