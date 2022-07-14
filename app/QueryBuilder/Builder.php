@@ -7,6 +7,7 @@ use App\Helpers\ReflectionHelper;
 
 class Builder extends DataBase
 {
+    use ReflectionHelper;
 
     private string $column = '*';
 
@@ -110,7 +111,7 @@ class Builder extends DataBase
      */
     public function save()
     {
-        $attributes = ReflectionHelper::getDynamicObjectProperties($this);
+        $attributes = $this->getDynamicObjectProperties($this);
 
         $COLUMN = "(" . implode(", ", array_keys($attributes)) . ")";
 
@@ -127,7 +128,7 @@ class Builder extends DataBase
 
     public function update()
     {
-        $attributes = ReflectionHelper::getDynamicObjectProperties($this);
+        $attributes = $this->getDynamicObjectProperties($this);
 
         $this->exe(
             'UPDATE ' . $this->table . ' SET ' . setValuseToColumn($attributes) . $this->where
