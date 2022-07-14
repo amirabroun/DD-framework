@@ -4,11 +4,10 @@ namespace App\Helpers;
 
 class ApiResponse
 {
-
     /**
-     * @var int $status
+     * @var string $status
      */
-    public int $status;
+    public string $status;
 
     /**
      * @var string $title
@@ -21,9 +20,10 @@ class ApiResponse
     public string $message = '';
 
     /**
-     * @param mixed $status
+     * @param string $status
+     * @return $this
      */
-    public function setStatus($status)
+    public function setStatus(string $status)
     {
         $this->status = $status;
 
@@ -31,9 +31,10 @@ class ApiResponse
     }
 
     /**
-     * @param mixed $title
+     * @param string $title
+     * @return $this
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
 
@@ -41,7 +42,8 @@ class ApiResponse
     }
 
     /**
-     * @param mixed $message
+     * @param array $message
+     * @return $this
      */
     public function setMessage(array $message)
     {
@@ -51,11 +53,12 @@ class ApiResponse
     }
 
     /**
+     * convert array massage to string
+     * 
      * @param array $errors
-     *
      * @return string 
      */
-    public function prepareMessage(array $errors)
+    private function prepareMessage(array $errors)
     {
         $ruleAttributes = ruleAttributes();
         $rules = '';
