@@ -48,7 +48,7 @@ class Builder extends DataBase
      */
     public function where($column, $operator, $value)
     {
-        $this->where = " WHERE " . $column . " " . $operator . " '$value'";
+        $this->where = " WHERE " . $this->table . '.' . $column . " " . $operator . " '$value'";
 
         return $this;
     }
@@ -177,5 +177,26 @@ class Builder extends DataBase
         !($this->table == '') ?: $this->table = getTableName($tableOrModel ?? $this);
 
         return $this;
+    }
+
+    /**
+     * One to many
+     *
+     * @param string $model
+     * @param string $relation_id
+     * @return $this
+     */
+    protected function hasMany(string $model, string $relation_id)
+    {
+        $relation = getTableName($model);
+
+        $exe = $this->exe(
+            "SELECT " . $relation . ".*" . " FROM " . "`$this->table`" .
+                " LEFT JOIN " . $relation . " ON " .
+                $relation . "." . $relation_id . " = " . $this->table . ".id " .
+                $this->where
+        );
+
+        return $this->setAttributesToObject($exe->fetchAll());
     }
 }

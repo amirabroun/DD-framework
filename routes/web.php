@@ -1,11 +1,14 @@
 <?php
 
-use App\Models\{Admin, Category, CategoryProduct, User};
+use App\Models\{Admin, Brand, Category, CategoryProduct, User};
 use App\QueryBuilder\Builder;
 use App\Router\Route;
 
 // test
 Route::get('/test', function () {
+    $brand = Brand::find(4);
+    $brand->products(); // all products for this brand
+    
     $categoryProduct = new CategoryProduct;
     $categoryProduct; // table = category_product
 
