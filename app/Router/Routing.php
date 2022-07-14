@@ -8,6 +8,7 @@ use App\Helpers\ReflectionHelper;
 
 class Routing
 {
+    use ReflectionHelper;
 
     /**
      * @var array $routes
@@ -154,10 +155,28 @@ class Routing
      */
     private function getParamFunction($function, $controller = null)
     {
-        return ReflectionHelper::findParamFunctionTypes($function, $controller)
-            ->setRequestIfExist()
-            ->setParamFunction($this->uriData)
-            ->getParamFunction();
+        $types = $this->findParamFunctionTypes($function, $controller);
+
+        $paramFunction = [];
+
+        foreach ($types as $key => $type) {
+            if (class_exists($type)) {
+                $paramFunction[$key] = new $type;
+
+                unset($types[$key]);
+            }
+        }
+
+        $setUri = 0;
+        foreach ($types as $key => $type) {
+            isEmpty($type) ?: settype($this->uriData[$setUri], $type);
+
+            $paramFunction[$key] = $this->uriData[$setUri];
+
+            $setUri++;
+        }
+
+        return prepareArray($paramFunction);
     }
 
     /**
