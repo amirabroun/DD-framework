@@ -16,11 +16,6 @@ class Builder extends DataBase
 
     protected string $table = '';
 
-    public function __construct()
-    {
-        $this->setTable();
-    }
-
     /**
      * @return $this
      */
