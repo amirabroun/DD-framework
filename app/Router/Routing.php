@@ -5,6 +5,7 @@ namespace App\Router;
 use Exception;
 use DomainException;
 use App\Helpers\ReflectionHelper;
+use App\Provider\RouteServiceProvider;
 
 class Routing
 {
@@ -39,9 +40,9 @@ class Routing
      * 
      * @param array $routes
      */
-    public function __construct(array $routes)
+    public function __construct()
     {
-        $this->routes = $routes[requestMethod()];
+        $this->routes = RouteServiceProvider::$routes;
     }
 
     /**
@@ -65,7 +66,7 @@ class Routing
      */
     public function findRouter()
     {
-        $this->router = $this->routes[$this->route];
+        $this->router = $this->routes[$this->route][requestMethod()];
 
         return $this;
     }

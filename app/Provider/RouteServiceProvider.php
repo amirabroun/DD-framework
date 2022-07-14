@@ -10,7 +10,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * @var array $routes
      */
-    public static $routes = [];
+    public static array $routes = [];
 
     /**
      * Require file
@@ -32,6 +32,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         $instance = new static;
 
-        return new Routing($instance->boot()::$routes);
+        $instance->boot();
+
+        return new Routing();
     }
 }

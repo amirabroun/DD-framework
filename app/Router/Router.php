@@ -124,7 +124,7 @@ class Router
      */
     private function setToRouteContainer()
     {
-        RouteServiceProvider::$routes[$this->requestMethod][$this->route] = $this;
+        RouteServiceProvider::$routes[$this->route][$this->requestMethod] = $this;
 
         return $this;
     }
