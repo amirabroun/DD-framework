@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 class Requests
 {
-
     /**
      * @var array $with
      */
@@ -13,7 +12,7 @@ class Requests
     /**
      * @var string $action
      */
-    private string $action;
+    protected string $action;
 
     /**
      * @param string $action
@@ -33,7 +32,7 @@ class Requests
      */
     public function route($route, array $with = [])
     {
-        "$this->action"($route, $with);
+        call_user_func($this->action, $route, $with);
     }
 
     /**
@@ -45,7 +44,9 @@ class Requests
      */
     public function resource($path, array $with = [])
     {
-        "$this->action"('/resources' . '/' . preparePath($path), $with);
+        $path = '/resources/' . preparePath($path);
+
+        call_user_func($this->action, $path, $with);
     }
 
     /**
@@ -57,6 +58,8 @@ class Requests
      */
     public function view($path, array $with = [])
     {
-        "$this->action"('/resources/Views/' . preparePath($path), $with);
+        $path = '/resources/Views/' . preparePath($path);
+
+        call_user_func($this->action, $path, $with);
     }
 }
