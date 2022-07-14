@@ -6,7 +6,6 @@ use App\QueryBuilder\Builder;
 
 class Model extends Builder
 {
-
     /**
      * @var string $table
      */
@@ -20,6 +19,7 @@ class Model extends Builder
     /**
      * New query
      * 
+     * @return $this
      */
     public static function query()
     {
@@ -33,6 +33,7 @@ class Model extends Builder
     /**
      * New record
      * 
+     * @return $this
      */
     public static function create(array $attributes = [])
     {
@@ -46,6 +47,7 @@ class Model extends Builder
     /**
      * Find by <int> id
      * 
+     * @return $this
      */
     public static function find(int $id, array $select = ['*'])
     {
@@ -53,7 +55,10 @@ class Model extends Builder
     }
 
     /**
-     * @return Model $this
+     * All of record
+     *
+     * @param array $select
+     * @return $this
      */
     public static function all(array $select = ['*'])
     {
@@ -61,6 +66,10 @@ class Model extends Builder
     }
 
     /**
+     * Select 
+     *
+     * @param array $column
+     * @return $this
      */
     public function get(array $column = ['*'])
     {
@@ -72,6 +81,9 @@ class Model extends Builder
     }
 
     /**
+     * Save new record
+     *
+     * @return $this
      */
     public function save()
     {
@@ -83,6 +95,8 @@ class Model extends Builder
     }
 
     /**
+     * Delete a record
+     *
      * @return bool
      */
     public function delete()
@@ -91,6 +105,10 @@ class Model extends Builder
     }
 
     /**
+     * Get first record
+     *
+     * @param array $column
+     * @return $this
      */
     public function first($column = ['*'])
     {
