@@ -20,7 +20,6 @@ class Model extends Builder
     /**
      * New query
      * 
-     * @return Model $this
      */
     public static function query()
     {
@@ -34,7 +33,6 @@ class Model extends Builder
     /**
      * New record
      * 
-     * @return Model $this
      */
     public static function create(array $attributes = [])
     {
@@ -48,7 +46,6 @@ class Model extends Builder
     /**
      * Find by <int> id
      * 
-     * @return Model $this
      */
     public static function find(int $id, array $select = ['*'])
     {
@@ -64,7 +61,6 @@ class Model extends Builder
     }
 
     /**
-     * @return Model $this
      */
     public function get(array $column = ['*'])
     {
@@ -76,7 +72,6 @@ class Model extends Builder
     }
 
     /**
-     * @return Model $this
      */
     public function save()
     {
@@ -94,7 +89,6 @@ class Model extends Builder
     }
 
     /**
-     * @return Model $this
      */
     public function first($column = ['*'])
     {
