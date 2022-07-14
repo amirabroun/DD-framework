@@ -221,13 +221,15 @@ function pluralize($word)
 
 function getTableName(object|string $model)
 {
-    if (is_string($model)) {
-        return pluralize($model);
+    if (is_object($model)) {
+        return pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
     }
 
-    $table = pluralize(strtolower(substr(strrchr(get_class($model), "\\"), 1)));
+    if (str_contains($model, 'App\Models')) {
+        return pluralize(strtolower(str_replace('App\Models\\', '', $model)));
+    }
 
-    return $table;
+    return pluralize($model);
 }
 
 function select($column = ['*'])
