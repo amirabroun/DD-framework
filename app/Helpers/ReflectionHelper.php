@@ -11,7 +11,7 @@ trait ReflectionHelper
      * @param string $controller
      * @return array $types
      */
-    public static function findParamFunctionTypes($function, $controller = null)
+    protected static function findParamFunctionTypes($function, $controller = null)
     {
         if ($controller) {
             $method = new \ReflectionMethod($controller, $function);
@@ -33,20 +33,26 @@ trait ReflectionHelper
         return $types;
     }
 
-    public static function getDynamicObjectProperties(object $object)
+    /**
+     * Get all dynamic object properties
+     *
+     * @param object $object
+     * @return array $properties
+     */
+    protected static function getDynamicObjectProperties(object $object)
     {
         $reflection = new \ReflectionObject($object);
 
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
         $defaultProperties = array_keys($reflection->getDefaultProperties());
 
-        $vars = [];
+        $dynamicProperties = [];
         foreach ($properties as $property) {
             if (!in_array($property->getName(), $defaultProperties)) {
-                $vars[$property->getName()] = $object->{$property->getName()};
+                $dynamicProperties[$property->getName()] = $object->{$property->getName()};
             }
         }
 
-        return $vars;
+        return $dynamicProperties;
     }
 }
