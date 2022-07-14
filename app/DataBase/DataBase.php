@@ -2,14 +2,21 @@
 
 namespace App\DataBase;
 
-use PDOException;
 use PDO;
+use PDOStatement;
 
-class DataBase
+abstract class DataBase
 {
-
+    /**
+     * @var PDO $PDO
+     */
     protected static PDO $PDO;
 
+    /**
+     * Connect to database
+     *
+     * @return void
+     */
     public static function connected()
     {
         $host = getenv("DB_HOST");
@@ -27,12 +34,18 @@ class DataBase
 
         try {
             static::$PDO = new PDO($dsn, $username, $password, $options);
-        } catch (PDOException $error) {
+        } catch (\PDOException $error) {
             die($error->getMessage());
         }
     }
 
-    public function exe(string $query)
+    /**
+     * Execute query
+     *
+     * @param string $query
+     * @return PDOStatement|bool $exe
+     */
+    protected function exe(string $query)
     {
         $exe = static::$PDO->query($query, PDO::FETCH_OBJ);
 
