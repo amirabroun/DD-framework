@@ -1,11 +1,14 @@
 <?php
 
-use App\Models\{Admin, Brand, Category, CategoryProduct, User};
+use App\Models\{Admin, Brand, Category, CategoryProduct, Product, User};
 use App\QueryBuilder\Builder;
 use App\Router\Route;
 
 // test
 Route::get('/test', function () {
+    $product = Product::find(9);
+    $product->brand(); // brand for this product
+
     $brand = Brand::find(4);
     $brand->products(); // all products for this brand
     
@@ -55,7 +58,7 @@ Route::get('/test', function () {
     $adminLogin = Admin::login('admin', 12345678);
 
     dd(
-        $newUserFromConstructor,
+        // $newUserFromConstructor,
         User::all(),
         $Jon,
         $newUser,

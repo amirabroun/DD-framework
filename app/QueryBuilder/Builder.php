@@ -194,4 +194,25 @@ class Builder extends DataBase
 
         return $this->setAttributesToObject($exe->fetchAll());
     }
+
+    /**
+     * One to one
+     *
+     * @param string $model
+     * @param string $relation_id
+     * @return $this
+     */
+    protected function hasOne(string $model, string $relation_id)
+    {
+        $relation = getTableName($model);
+
+        $exe = $this->exe(
+            "SELECT " . $relation . ".*" . " FROM " . "`$this->table`" .
+                " LEFT JOIN " . $relation . " ON " .
+                $this->table . "." . $relation_id . " = " . $relation . ".id" .
+                $this->where
+        );
+
+        return $this->setAttributesToObject($exe->fetch());
+    }
 }

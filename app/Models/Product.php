@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\DataBase\DataBase;
-use PDO;
-
 class Product extends Model
 {
-    
+    public function brand()
+    {
+        return $this->hasOne(Brand::class, 'brand_id');
+    }
 }
