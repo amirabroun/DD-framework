@@ -263,3 +263,13 @@ function setValuseToColumn(array $attributes, $ignore = null)
 
     return trim($updateQuery, ', ');
 }
+
+function prepareArray($array)
+{
+    $new = [];
+    for ($i = 0; $i < count($array); $i++) {
+        $new[$i] = $array[$i];
+    }
+
+    return $new;
+}
