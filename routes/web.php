@@ -1,7 +1,9 @@
 <?php
 
+use App\Helpers\ApiResponse;
 use App\Models\{Admin, Brand, Category, CategoryProduct, Product, User};
 use App\QueryBuilder\Builder;
+use App\Requests\LoginRequest;
 use App\Router\Route;
 
 // test
@@ -11,7 +13,7 @@ Route::get('/test', function () {
 
     $brand = Brand::find(4);
     $brand->products(); // all products for this brand
-    
+
     $categoryProduct = new CategoryProduct;
     $categoryProduct; // table = category_product
 
@@ -69,6 +71,10 @@ Route::get('/test', function () {
         $user,
         $category
     );
+});
+
+Route::get('/{id}/{username}', function (LoginRequest $request, int $id, ApiResponse $response, $username) {
+    dd($request, $id,  $response, $username);
 });
 
 // index
