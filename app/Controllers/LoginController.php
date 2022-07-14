@@ -8,7 +8,10 @@ use App\Controllers\Controller;
 
 class LoginController extends Controller
 {
-
+    /**
+     * @param LoginRequest $request
+     * @return void
+     */
     public function adminLogin(LoginRequest $request)
     {
         $admin = $request->validated();
@@ -24,6 +27,11 @@ class LoginController extends Controller
         redirect()->route('/');
     }
 
+    /**
+     * Unless Session
+     *
+     * @return void
+     */
     public function logOut()
     {
         if (isset($_SESSION['_admin_log_'])) {
