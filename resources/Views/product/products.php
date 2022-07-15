@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 
-$categories = App\Models\Category::getCategories();
-$brands = App\Models\Brand::getBrands();
-$products = App\Models\Product::getProducts();
+$categories = Category::all();
+$brands = Brand::all();
+$products = Product::all();
+
 dd($categories, $brands, $products);

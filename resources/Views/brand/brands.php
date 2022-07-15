@@ -1,3 +1,5 @@
 <?php
 
-$brands = App\Models\Brand::getBrands();
+$brands = App\Models\Brand::all();
+
+dd($brands);

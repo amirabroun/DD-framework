@@ -1,3 +1,5 @@
-<?php 
+<?php
 
-$users = App\Models\User::getUsers(); 
+$users = App\Models\User::all();
+
+dd($users);
