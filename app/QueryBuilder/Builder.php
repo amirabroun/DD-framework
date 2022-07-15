@@ -44,7 +44,11 @@ class Builder extends DataBase
      */
     public function where($column, $operator, $value)
     {
-        $this->where = " WHERE " . $this->table . '.' . $column . " " . $operator . " '$value'";
+        if ($value == null || $value == 'null') {
+            $this->where = " WHERE " . $this->table . '.' . $column . " " . 'is' . " NULL;";
+        } else {
+            $this->where = " WHERE " . $this->table . '.' . $column . " " . $operator . " '$value'";
+        }
 
         return $this;
     }
