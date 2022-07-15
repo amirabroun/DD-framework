@@ -16,7 +16,6 @@ services:
         build: ./docker/php
         volumes:
             - ${PWD}:/usr/share/nginx/www
-        working_dir: ${PWD}:/usr/share/nginx/www
         env_file:
             - ./.env
 
