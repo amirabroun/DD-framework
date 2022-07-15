@@ -3,17 +3,16 @@
 namespace App\Router;
 
 /**
- * @method static Router get(string $route, $action = null) 
- * @method static Router post(string $route, $action = null) 
- * @method static Router put(string $route, $action = null) 
- * @method static Router patch(string $route, $action = null) 
- * @method static Router delete(string $route, $action = null) 
+ * @method static Router get(string $uri, string|array|callable $action = null) 
+ * @method static Router post(string $uri, string|array|callable $action = null) 
+ * @method static Router put(string $uri, string|array|callable $action = null) 
+ * @method static Router patch(string $uri, string|array|callable $action = null) 
+ * @method static Router delete(string $uri, string|array|callable $action = null) 
  * 
- * @see Router
+ * @return @see Router
  */
-class Route extends Router
+class Route
 {
-
     /**
      * New router
      * 
