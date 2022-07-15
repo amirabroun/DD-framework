@@ -6,16 +6,15 @@ use App\Provider\RouteServiceProvider;
 
 class Router
 {
-
     /**
      * @var string $requestMethod GET|POST|PUT|PATCH|DELETE|ANY
      */
-    public string $requestMethod = '';
+    private string $requestMethod = '';
 
     /**
      * @var string $route 
      */
-    public string $route = '';
+    private string $route = '';
 
     /**
      * @var string|null $controller 
@@ -23,7 +22,7 @@ class Router
     public $controller;
 
     /**
-     * @var string|array|callable $function Method controller | Callable function
+     * @var string|array|callable $function
      */
     public $function;
 
@@ -48,7 +47,7 @@ class Router
      * 
      * @return $this
      */
-    public function controller($controller)
+    public function controller(string $controller)
     {
         $this->controller = new $controller();
 
@@ -56,11 +55,11 @@ class Router
     }
 
     /**
-     * @param string $function 
+     * @param string|array|callable $function 
      * 
      * @return $this
      */
-    public function function($function)
+    public function function(string|array|callable $function)
     {
         $this->function = $function;
 
@@ -72,7 +71,7 @@ class Router
      * 
      * @return $this
      */
-    public function route(string $route)
+    private function route(string $route)
     {
         $this->route = trim($route, '/');
 
@@ -84,7 +83,7 @@ class Router
      * 
      * @return $this
      */
-    public function requestMethod(string $requestMethod)
+    private function requestMethod(string $requestMethod)
     {
         $this->requestMethod = strtoupper($requestMethod);
 
@@ -96,7 +95,7 @@ class Router
      * 
      * @return $this
      */
-    public function setAction(string|array|callable|null $action)
+    private function setAction(string|array|callable|null $action)
     {
         if (!isset($action)) {
             return $this;
@@ -118,7 +117,7 @@ class Router
     }
 
     /**
-     * Set requestMethod|route with $this->route to route container
+     * Set new router with this route and request method
      * 
      * @return $this
      */
