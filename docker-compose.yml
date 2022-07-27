@@ -2,20 +2,20 @@ version: "3.9"
 services:
 
     nginx:
-        container_name: ${APP_TITLE:-nginx}
+        container_name: DD-framework-nginx
         build: ./docker/nginx
         links:
             - php
         volumes:
-            - ${PWD}:/usr/share/nginx/www
+            - ./:/usr/share/nginx/www
         ports:
             - ${APP_PORT:-8000}:80
 
     php:
-        container_name: php8-fpm
+        container_name: ${APP_TITLE}
         build: ./docker/php
         volumes:
-            - ${PWD}:/usr/share/nginx/www
+            - ./:/usr/share/nginx/www
         env_file:
             - ./.env
 
