@@ -2,24 +2,22 @@ version: "3.9"
 services:
 
     nginx:
-        container_name: DD-framework-nginx
+        container_name: "${APP_TITLE}"
         build: ./docker/nginx
+        ports:
+            - "${APP_PORT}:80"
         links:
             - php
         volumes:
             - ./:/usr/share/nginx/www
-        ports:
-            - ${APP_PORT:-8000}:80
 
     php:
-        container_name: ${APP_TITLE}
+        container_name: "${APP_NAME}"
         build: ./docker/php
         volumes:
             - ./:/usr/share/nginx/www
-        env_file:
-            - ./.env
 
 networks:
     default:
         external: true
-        name: ${APP_DOCKER_NETWORK}
+        name: "${APP_DOCKER_NETWORK}"
